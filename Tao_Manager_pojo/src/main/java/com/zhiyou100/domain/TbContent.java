@@ -3,6 +3,7 @@ package com.zhiyou100.domain;
 import java.util.Date;
 
 public class TbContent extends TbContentKey {
+	
     private Long categoryId;
 
     private String title;
