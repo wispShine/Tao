@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+         http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+       ">
+        
+        
+        
+        
+        <!-- 配置数据源 -->
+        <context:property-placeholder location="classpath:resource/*.properties"/>
+        <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        	<property name="driverClassName" value="${jdbc.driver}"/>
+        	<property name="url" value="${jdbc.url}"/>
+        	<property name="username" value="${jdbc.username}"/>
+        	<property name="password" value="${jdbc.password}"/>
+        </bean>
+        
+        <!-- 配置事务管理器 -->
+	    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	        <!-- 数据源 -->
+	        <property name="dataSource" ref="dataSource" />
+	    </bean>
+	    <!-- 开启注解事务 -->
+	    <tx:annotation-driven transaction-manager="transactionManager"/>
+        
+        
+        <!-- 配置SqlSessionFactory-->
+        <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        	<!-- 注入数据库连接池 -->
+        	<property name="dataSource" ref="dataSource"/>
+        	<!-- 注入MyBatisConf.xml文件 -->
+        	<property name="configLocation" value="classpath:MyBatisConf.xml"/>
+        	<!-- 注入mapper.xml文件-->
+        	<!-- <property name="mapperLocations" value="classpath:com/zhiyou100/mapper/*.xml"/> -->
+        </bean>
+        
+        <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        	<!-- 注入sqlsession 创建sqlsession对象   当配置SqlSessionFactory时 id=sqlSessionFactory则不需要注入      注意id的名字！！！！-->
+        	<!-- <property name="sqlSessionFactory" ref="sqlSessionFactory"/> -->
+        	<!-- 生成mapper代理 -->
+        	<property name="basePackage" value="com.zhiyou100.mapper"/>
+        </bean>
+        
+        
+         
+</beans>
